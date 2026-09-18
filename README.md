@@ -34,14 +34,27 @@ Still open: whether every polyomino can be built. It is stated precisely in `Con
 
 ## Run the Lean proofs
 
-    cd ~/Desktop/shape-algebra
+You need [elan](https://github.com/leanprover/elan), Lean's version manager. If
+`elan --version` fails, install it (Linux/macOS; for Windows see elan's README):
+
+    curl https://elan.lean-lang.org/elan-init.sh -sSf | sh
+    source ~/.elan/env      # or open a new terminal
+
+Then:
+
+    git clone https://github.com/purge12/shape-algebra
+    cd shape-algebra
     lake build          # about 3 minutes; "Build completed successfully" = every proof checked
 
-Lean lives in `~/.elan`. If `lake` isn't found, add this to `~/.zshrc`:
-
-    export PATH="$HOME/.elan/bin:$PATH"
+The first `lake build` downloads the Lean version pinned in `lean-toolchain`.
+There are no other dependencies (no Mathlib).
 
 ## Rerun the Python experiments
+
+Python 3, standard library only. `test.py` reads the formulas from the blog posts'
+source, so clone the blog next to this repo (or set `SHAPE_BLOG` to its `content/blog/`):
+
+    git clone --depth 1 https://github.com/purge12/pUrGe12.github.io   # beside shape-algebra/
 
 From `python/`:
 

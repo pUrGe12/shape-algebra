@@ -1,5 +1,7 @@
-import re, sys, itertools
-BLOG="/home/purge/Desktop/pUrGe12.github.io/content/blog/"
+import re, sys, itertools, os
+# The blog posts' source; by default a clone of the blog repo next to this one.
+BLOG=os.path.join(os.environ.get("SHAPE_BLOG") or os.path.join(os.path.dirname(os.path.abspath(__file__)),
+    "..", "..", "pUrGe12.github.io", "content", "blog"), "")
 
 def cells_of(html):
     return frozenset((int(c), -int(r)) for r,c in re.findall(r'grid-area:(\d+)/(\d+)', html))
