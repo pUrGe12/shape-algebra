@@ -132,6 +132,19 @@ theorem swap_fixed_R : ∀ j < 16, 2 ≤ j →
     eval C j (List.replicate (j - 2) (add R) ++ [push R, add R, mirror R]) := by
   decide +kernel
 
+/-- Or latch onto some `Z` right after, on both sides:
+    `A_X^j (1_Y·(j-1)) M_Y Z  =  A_Y^j (1_X·(j-1)) M_X Z`.
+    The latch resets the reference point the same way on both sides, and `X` is no
+    longer needed. -/
+theorem swap_latched_C : ∀ j < 16, 1 ≤ j → ∀ z ∈ [R, C],
+    eval C j (List.replicate (j - 1) (add R) ++ [mirror R, push z]) =
+    eval R j (List.replicate (j - 1) (add C) ++ [mirror C, push z]) := by
+  decide +kernel
+theorem swap_latched_R : ∀ j < 16, 1 ≤ j → ∀ z ∈ [R, C],
+    eval R j (List.replicate (j - 1) (add C) ++ [mirror C, push z]) =
+    eval C j (List.replicate (j - 1) (add R) ++ [mirror R, push z]) := by
+  decide +kernel
+
 -- Subtraction can split a shape in two.
 #eval IO.println (draw C 3 [add R, push R, mirror C, sub R])
 

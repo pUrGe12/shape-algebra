@@ -14,8 +14,8 @@ A formal model of the polyomino algebra from the blog posts
 | Every fixed polyomino with up to 7 cells (1,067 shapes) can be built without subtraction[^count] | `Coverage.lean` |
 | If no cell of a shape could have been the last one added ("blocked"), every formula for it uses subtraction | `Blocked.lean` |
 | 100 blocked shapes with 11–14 cells: each needs subtraction, and each has a formula that builds it | `Coverage.lean` |
-| Part 2's rule `A_X^j(1_Y·(j−1))M_Y = A_Y^j(1_X·(j−1))M_X X` fails as a substitution: both sides draw the same shape, but a following `+1_X` lands in different places (j = 2…9) | `Examples.lean` |
-| Moving the push before the last `1_X` fixes it: `A_X^j(1_Y·(j−1))M_Y = A_Y^j(1_X·(j−2)) X 1_X M_X` leaves the same state for X = R and X = C (j = 2…15) | `Examples.lean` |
+| Part 2's swap rule is a perfect substitution when both sides are followed by a latch Z: `A_X^j(1_Y·(j−1))M_Y Z = A_Y^j(1_X·(j−1))M_X Z` leaves the same state for X, Z ∈ {R, C} (j = 1…15) | `Examples.lean` |
+| It also substitutes anywhere with the push moved before the last `1_X`: `A_X^j(1_Y·(j−1))M_Y = A_Y^j(1_X·(j−2)) X 1_X M_X` (X ∈ {R, C}, j = 2…15) | `Examples.lean` |
 | A shape can be built exactly when each of its 8 rotations and reflections can (swapping R and C in a formula flips its shape along the diagonal) | `Swap.lean`, `Conjecture.lean` |
 
 [^count]: "Every" rests on one outside fact: the table sizes 1, 2, 6, 19, 63, 216, 760 are the known counts of fixed polyominoes (OEIS A001168).
