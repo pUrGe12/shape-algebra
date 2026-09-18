@@ -20,8 +20,8 @@ def examples : List Example := [
   -- A_C^(4)
   ⟨"tetromino 2", C, 4, [],
     ["#", "#", "#", "#"]⟩,
-  -- ((A_R^(2)+1_R)^M)_C+1_R
-  ⟨"tetromino 3", R, 2, [add R, mirror R, push C, add R],
+  -- ((A_C^(2)+1_R)^M)_C+1_R
+  ⟨"tetromino 3", C, 2, [add R, mirror R, push C, add R],
     ["##", "##"]⟩,
   -- (A_R^(2)+1_C)^M+1_R
   ⟨"tetromino 4", R, 2, [add C, mirror R, add R],
@@ -71,10 +71,10 @@ def examples : List Example := [
   -- (A_C^(2)+1_R)_R+1_C
   ⟨"tetromino 19", C, 2, [add R, push R, add C],
     [".#", "##", "#."]⟩,
-  -- ((((((((A_C^(2)+1_R)^M)_C+1_R)_P+1_C)_R+1_R)^M)^M_C+1_C)+1_R)^M
+  -- (((((((A_C^(2)+1_R)^M)_C+1_R)_P+1_C)_R+1_R)^M)^M_C+1_C)+1_R
   ⟨"pin example", C, 2,
     [add R, mirror R, push C, add R, pin, add C, push R, add R, mirror R, mirror C,
-     add C, add R, mirror R],
+     add C, add R],
     ["..#.", ".###", "###.", ".#.."]⟩,
   -- (((A_R^(2)+1_C)^M_R)_R+1_R)_C+1_C
   ⟨"plus pentomino", R, 2, [add C, mirror R, push R, add R, push C, add C],
@@ -82,8 +82,8 @@ def examples : List Example := [
   -- (((A_R^(2)+1_C)_C+1_R)+1_C)^M
   ⟨"staircase", R, 2, [add C, push C, add R, add C, mirror R],
     ["##.", ".##", "..#"]⟩,
-  -- (((((A_C^(3)+1_R)+1_R)^M)_C+1_R)_R+1_C)+1_C
-  ⟨"3x3 ring", C, 3, [add R, add R, mirror R, push C, add R, push R, add C, add C],
+  -- (((((A_C^(3)+1_R)+1_R)^M)_C+1_R)+1_C)+1_C
+  ⟨"3x3 ring", C, 3, [add R, add R, mirror R, push C, add R, add C, add C],
     ["###", "#.#", "###"]⟩,
   -- part 2's carving formula (subtraction + two pins)
   ⟨"part 2 carving", R, 3,
@@ -94,31 +94,14 @@ def examples : List Example := [
 
 def Example.ok (e : Example) : Bool := shapeOf e.base e.len e.ops == some (pic e.want)
 
-#eval s!"{(examples.filter (·.ok)).length} / {examples.length} match"
-#eval (examples.filter (!·.ok)).map (·.name)
+theorem examples_ok : examples.all (·.ok) = true := by decide +kernel
 
 -- Look at what a formula actually builds:
-#eval IO.println (draw R 2 [add R, mirror R, push C, add R])   -- tetromino 3 as written
+#eval IO.println (draw C 2 [add R, mirror R, push C, add R])   -- tetromino 3
 
 /-! ## 7. Facts Lean checks by running the rules
 
 `by decide` means: Lean evaluates both sides and confirms the statement. -/
-
--- Tetromino 3 as written is a straight strip; starting from A_C^(2) gives the square.
-theorem tetromino3_as_written : shapeOf R 2 [add R, mirror R, push C, add R] = some (pic ["####"]) := by
-  decide +kernel
-theorem tetromino3_fixed : shapeOf C 2 [add R, mirror R, push C, add R] = some (pic ["##", "##"]) := by
-  decide +kernel
-
--- The ring as written misses its target; dropping the `_R` push hits it.
-theorem ring_as_written :
-    shapeOf C 3 [add R, add R, mirror R, push C, add R, push R, add C, add C]
-      ≠ some (pic ["###", "#.#", "###"]) := by
-  decide +kernel
-theorem ring_fixed :
-    shapeOf C 3 [add R, add R, mirror R, push C, add R, add C, add C]
-      = some (pic ["###", "#.#", "###"]) := by
-  decide +kernel
 
 -- A_R^(1) and A_C^(1) are the same cell but not the same starting point.
 theorem strips_of_one_differ :
@@ -133,7 +116,20 @@ def swapRight (j : Nat) (rest : List Op) := shapeOf R j (List.replicate (j - 1) 
 theorem swap_same_shape : ∀ j < 10, 2 ≤ j → swapLeft j [] = swapRight j [] := by
   decide +kernel
 -- ...but one more `+1_C` lands in different places, so it can't be substituted.
+-- The trailing push sets the latch to C and also arms "most cells" for the next ±1.
 theorem swap_not_substitutable : ∀ j < 10, 2 ≤ j → swapLeft j [add C] ≠ swapRight j [add C] := by
+  decide +kernel
+
+/-- Pushing before the last `1_X` instead:
+    `A_X^j (1_Y·(j-1)) M_Y  =  A_Y^j (1_X·(j-2)) X 1_X M_X`.
+    The whole state matches (shape, latch, push, pin), so it substitutes anywhere. -/
+theorem swap_fixed_C : ∀ j < 16, 2 ≤ j →
+    eval C j (List.replicate (j - 1) (add R) ++ [mirror R]) =
+    eval R j (List.replicate (j - 2) (add C) ++ [push C, add C, mirror C]) := by
+  decide +kernel
+theorem swap_fixed_R : ∀ j < 16, 2 ≤ j →
+    eval R j (List.replicate (j - 1) (add C) ++ [mirror C]) =
+    eval C j (List.replicate (j - 2) (add R) ++ [push R, add R, mirror R]) := by
   decide +kernel
 
 -- Subtraction can split a shape in two.

@@ -5,18 +5,32 @@ A formal model of the polyomino algebra from the blog posts
 
 ## Results
 
-| Claim | Status |
+### Proved in Lean
+
+`lake build` checks every one of these.
+
+| Result | File |
 |---|---|
-| All 24 formulas in the posts vs. their pictures | 21 match; 3 are typos in the posts (`ShapeAlgebra/Examples.lean`) |
-| Part 2's rule `A_X^j(1_Y·(j−1))M_Y = A_Y^j(1_X·(j−1))M_X X` | False as a substitution rule (proved in `Examples.lean`) |
-| Every shape up to 7 cells builds without subtraction | Proved in Lean (`Coverage.lean`) |
-| Every shape up to 10 cells builds without subtraction | Checked in Python (`python/coverage.py`) |
-| Shapes where no cell can be added last need subtraction | Proved for every formula (`Blocked.lean`) |
-| Such "blocked" shapes: 0 up to 10 cells, then 4, 4, 36, 56 at 11–14 | Python (`python/peel.py`) |
-| All 100 blocked shapes build with one filler cell | Search in Python, formulas checked in Lean (`Coverage.lean`) |
-| Swapping R and C flips the shape along the diagonal | Proved for every formula (`Swap.lean`) |
-| One orientation of a shape is enough (all 8 follow) | Proved (`Conjecture.lean`) |
-| Every polyomino can be built | Open; stated precisely in `Conjecture.lean` |
+| Every fixed polyomino with up to 7 cells (1,067 shapes) can be built without subtraction[^count] | `Coverage.lean` |
+| If no cell of a shape could have been the last one added ("blocked"), every formula for it uses subtraction | `Blocked.lean` |
+| 100 blocked shapes with 11–14 cells: each needs subtraction, and each has a formula that builds it | `Coverage.lean` |
+| Part 2's rule `A_X^j(1_Y·(j−1))M_Y = A_Y^j(1_X·(j−1))M_X X` fails as a substitution: both sides draw the same shape, but a following `+1_X` lands in different places (j = 2…9) | `Examples.lean` |
+| Moving the push before the last `1_X` fixes it: `A_X^j(1_Y·(j−1))M_Y = A_Y^j(1_X·(j−2)) X 1_X M_X` leaves the same state for X = R and X = C (j = 2…15) | `Examples.lean` |
+| A shape can be built exactly when each of its 8 rotations and reflections can (swapping R and C in a formula flips its shape along the diagonal) | `Swap.lean`, `Conjecture.lean` |
+
+[^count]: "Every" rests on one outside fact: the table sizes 1, 2, 6, 19, 63, 216, 760 are the known counts of fixed polyominoes (OEIS A001168).
+
+### Inferred from Python
+
+Exhaustive searches. Evidence, not proof.
+
+| Result | Script |
+|---|---|
+| Every fixed polyomino with up to 10 cells (50,148 shapes) can be built without subtraction | `python/coverage.py` |
+| Blocked shapes first appear at 11 cells: there are 4, 4, 36 and 56 with 11–14 cells, the 100 in the Lean table above | `python/peel.py` |
+| Each of those 100 can be built with at most one cell outside the shape at any time | `python/experiment.py` |
+
+Still open: whether every polyomino can be built. It is stated precisely in `Conjecture.lean`.
 
 ## Run the Lean proofs
 
