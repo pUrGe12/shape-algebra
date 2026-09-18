@@ -1,0 +1,5 @@
+name = "shape_algebra"
+defaultTargets = ["ShapeAlgebra"]
+
+[[lean_lib]]
+name = "ShapeAlgebra"

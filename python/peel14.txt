@@ -1,0 +1,125 @@
+N= 1  fixed polyominoes=        1  no cell can be added last=     0
+N= 2  fixed polyominoes=        2  no cell can be added last=     0
+N= 3  fixed polyominoes=        6  no cell can be added last=     0
+N= 4  fixed polyominoes=       19  no cell can be added last=     0
+N= 5  fixed polyominoes=       63  no cell can be added last=     0
+N= 6  fixed polyominoes=      216  no cell can be added last=     0
+N= 7  fixed polyominoes=      760  no cell can be added last=     0
+N= 8  fixed polyominoes=     2725  no cell can be added last=     0
+N= 9  fixed polyominoes=     9910  no cell can be added last=     0
+N=10  fixed polyominoes=    36446  no cell can be added last=     0
+N=11  fixed polyominoes=   135268  no cell can be added last=     4
+N=12  fixed polyominoes=   505861  no cell can be added last=     4
+N=13  fixed polyominoes=  1903890  no cell can be added last=    36
+N=14  fixed polyominoes=  7204874  no cell can be added last=    56
+
+examples at N=11:
+###
+#.#
+#..
+#.#
+###
+
+#####
+#...#
+##.##
+
+##.##
+#...#
+#####
+
+###
+#.#
+..#
+#.#
+###
+
+
+examples at N=12:
+###
+#.#
+#..
+#..
+#.#
+###
+
+######
+#....#
+##..##
+
+##..##
+#....#
+######
+
+###
+#.#
+..#
+..#
+#.#
+###
+
+
+examples at N=13:
+###
+#.#
+#..
+#..
+#..
+#.#
+###
+
+###
+#.#
+#.#
+#..
+#.#
+###
+
+###
+#.#
+#..
+#.#
+#.#
+###
+
+####
+#..#
+#...
+#..#
+####
+
+
+examples at N=14:
+###
+#.#
+#..
+#..
+#..
+#..
+#.#
+###
+
+###
+#.#
+#.#
+#..
+#..
+#.#
+###
+
+###
+#.#
+#..
+#..
+#.#
+#.#
+###
+
+####
+#..#
+#...
+#...
+#..#
+####
+
+229s
